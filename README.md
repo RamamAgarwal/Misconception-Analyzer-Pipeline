@@ -345,3 +345,5 @@ Each module has a single, named responsibility. A reviewer can open `llm_analyze
 - **Adaptive question generation** — feed misconceptions back into the AI Tutor to auto-generate targeted remediation questions
 - **Multi-subject extension** — add Chemistry and Biology concept taxonomies to the rule-based fallback
 - **Student-facing hints** — expose the `hint` field directly in the AI Tutor UI after each wrong attempt
+
+ChatGPT LLM Chat Thread: https://chatgpt.com/share/69dbb1e0-78fc-83e8-908e-e7f22a8dfb70
