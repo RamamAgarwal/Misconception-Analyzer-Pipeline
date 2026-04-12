@@ -1,0 +1,79 @@
+{
+  "S01": {
+    "concepts": {
+      "Algebra": {
+        "mastery_score": 0.0,
+        "identified_misconceptions": [
+          "The student likely added 3 to 11 instead of subtracting 3 when isolating the term with x."
+        ],
+        "hints_for_student": [
+          "Remember that to isolate the term with x, you need to perform the inverse operation and subtract 3 from both sides, not add."
+        ]
+      },
+      "Fractions": {
+        "mastery_score": 40.2,
+        "identified_misconceptions": [
+          "The student incorrectly added the denominators instead of finding a common denominator before adding the numerators."
+        ],
+        "hints_for_student": [
+          "Remember, when adding fractions, you must first find a common denominator and then add only the numerators."
+        ]
+      }
+    }
+  },
+  "S02": {
+    "concepts": {
+      "Kinematics": {
+        "mastery_score": 0.0,
+        "identified_misconceptions": [
+          "The student multiplied acceleration by time but incorrectly wrote or calculated the product as just the acceleration value.",
+          "The student incorrectly multiplied only half of the acceleration by the time squared, possibly calculating 9.8 \u00d7 (3)^2 \u00d7 0.5 as (9.8 \u00d7 3) \u00d7 0.5 instead of 0.5 \u00d7 9.8 \u00d7 9."
+        ],
+        "hints_for_student": [
+          "Remember to multiply acceleration by time completely to find the change in velocity, not just write the acceleration value.",
+          "Make sure to square the entire time before multiplying by half the acceleration to get the correct term (\u00bdat\u00b2)."
+        ]
+      },
+      "Newton's Laws": {
+        "mastery_score": 100.0,
+        "identified_misconceptions": [],
+        "hints_for_student": []
+      }
+    }
+  },
+  "S03": {
+    "concepts": {
+      "Algebra": {
+        "mastery_score": 0.0,
+        "identified_misconceptions": [
+          "The student multiplied the right side by 3 but did not correctly multiply the left side, effectively confusing division by 3 with multiplication by 3."
+        ],
+        "hints_for_student": [
+          "Remember that multiplying both sides by 3 cancels the division by 3, so you should get x equals 9 times 3."
+        ]
+      },
+      "Fractions": {
+        "mastery_score": 40.2,
+        "identified_misconceptions": [
+          "The student added numerators and denominators separately without finding a common denominator."
+        ],
+        "hints_for_student": [
+          "Remember to find a common denominator first, then only add the numerators."
+        ]
+      }
+    }
+  },
+  "S04": {
+    "concepts": {
+      "Newton's Laws": {
+        "mastery_score": 0.0,
+        "identified_misconceptions": [
+          "The student confused the concept of force causing acceleration (Second Law) with the idea of objects maintaining their state of motion unless acted upon (First Law)."
+        ],
+        "hints_for_student": [
+          "Remember that Newton's First Law describes the behavior of objects at rest or in uniform motion when no net force acts, whereas the Second Law relates force to acceleration."
+        ]
+      }
+    }
+  }
+}
