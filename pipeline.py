@@ -167,8 +167,7 @@ def _chain_prompts(row: dict) -> dict:
             input=[{"role": "user", "content": step1}],
             max_output_tokens=400,
         )
-        solution = (getattr(solution_resp, "output_text", "") or "").strip() or \
-                   f"The correct answer is {row['correct_answer']}."
+        solution = (getattr(solution_resp, "output_text", "") or "").strip() or f"The correct answer is {row['correct_answer']}."
     except Exception as exc:
         log.error(f"Chain step-1 failed: {exc}")
         solution = f"The correct answer is {row['correct_answer']}."
@@ -183,11 +182,8 @@ def _chain_prompts(row: dict) -> dict:
 
 
 def analyze_misconceptions(df: pd.DataFrame, strategy: str = STRATEGY) -> pd.DataFrame:
-    """
-    
-    """
-    analyze = _chain_prompts if strategy == "chain" else \
-              (lambda row: _call_llm(_zero_shot_prompt(row)))
+
+    analyze = _chain_prompts if strategy == "chain" else (lambda row: _call_llm(_zero_shot_prompt(row)))
 
     records = []
     for _, row in df[~df["is_correct"]].iterrows():
@@ -196,9 +192,9 @@ def analyze_misconceptions(df: pd.DataFrame, strategy: str = STRATEGY) -> pd.Dat
 
         result = analyze(row.to_dict())
         records.append({
-            "student_id":   row["student_id"],
-            "concept":      row["concept"],
-            "timestamp":    row["timestamp"],
+            "student_id": row["student_id"],
+            "concept": row["concept"],
+            "timestamp": row["timestamp"],
             **result,
         })
 
@@ -206,11 +202,9 @@ def analyze_misconceptions(df: pd.DataFrame, strategy: str = STRATEGY) -> pd.Dat
         columns=["student_id", "concept", "timestamp", "misconception", "severity", "hint"]
     )
 
-
 # III. AGGREGATION
 
 SEVERITY_DEDUCTION = {"low": 5, "medium": 12, "high": 22}
-
 
 def _time_weighted_base(group: pd.DataFrame) -> float:
     """
@@ -229,8 +223,8 @@ def _time_weighted_base(group: pd.DataFrame) -> float:
 
 def build_teacher_report(df: pd.DataFrame, analysis: pd.DataFrame) -> dict:
     """
-    Produce the final report keyed by student → concept.
-    Mastery = time-weighted base score − Σ severity deductions (min 0).
+    Produce the final report keyed by student -> concept.
+    Mastery = time-weighted base score - Σ severity deductions (min 0).
     """
     report = {}
 
@@ -240,15 +234,14 @@ def build_teacher_report(df: pd.DataFrame, analysis: pd.DataFrame) -> dict:
         for concept, c_df in s_df.groupby("concept"):
             base = _time_weighted_base(c_df)
 
-            # Pull LLM analysis rows for this student+concept
-            mask = (analysis["student_id"] == student_id) & \
-                   (analysis["concept"] == concept)
+            # Pull LLM analysis rows for this student + concept
+            mask = (analysis["student_id"] == student_id) & (analysis["concept"] == concept)
             rows = analysis[mask]
 
             misconceptions = rows["misconception"].tolist()
-            hints          = rows["hint"].tolist()
-            penalty        = sum(SEVERITY_DEDUCTION.get(s, 10)
-                                 for s in rows["severity"].tolist())
+            hints = rows["hint"].tolist()
+            penalty = sum(SEVERITY_DEDUCTION.get(s, 10)
+            for s in rows["severity"].tolist())
 
             report[student_id]["concepts"][concept] = {
                 "mastery_score": max(0.0, round(base - penalty, 1)),
