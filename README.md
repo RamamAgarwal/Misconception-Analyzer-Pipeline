@@ -57,10 +57,7 @@
 **Dependencies:**
 
 ```bash
-pip install pandas streamlit plotly
-
-# For Gemini LLM:
-pip install pandas google-genai
+pip install -r requirements.txt
 export GEMINI_API_KEY="your-key-here"
 ```
 
