@@ -327,7 +327,6 @@ Run with `streamlit run dashboard.py`. Shows:
 ├── teacher_report.json      Generated output (created by running pipeline.py)
 ├── README.md
 └── src/
-    ├── __init__.py
     ├── config.py            All constants: provider, model, strategy, file paths
     ├── data_loader.py       load_and_clean() — JSON → validated Pandas DataFrame
     ├── llm_analyzer.py      Prompts, rule-based fallback, LLM dispatch, analyze_misconceptions()
