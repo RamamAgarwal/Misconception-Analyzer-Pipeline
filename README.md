@@ -1,6 +1,6 @@
 # Misconception Analyzer Pipeline
 
-> **Problem → Solution → Impact**
+> **Problem → Solution → Impact** 
 > Students make systematic errors that teachers can't track at scale → an LLM-powered pipeline diagnoses each error, scores concept mastery, and surfaces it in a teacher dashboard → a teacher can now spot in one glance that *S01 is repeatedly confusing denominator addition in Fractions* and intervene before the gap compounds.
 
 ---
