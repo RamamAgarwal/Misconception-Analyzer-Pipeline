@@ -82,14 +82,14 @@ streamlit run dashboard.py
 
 ### Input: `student_logs.json`
 
-10 valid records covering 4 students, 2 subjects, 4 concepts — plus **2 intentionally malformed rows** to demonstrate validation:
+10 valid records covering 4 students, 2 subjects, 4 concepts along with **2 intentionally malformed rows** to demonstrate validation:
 
 | Row    | Field          | Flaw                         | How it's caught                                    |
 | ------ | -------------- | ---------------------------- | -------------------------------------------------- |
 | Row 10 | `is_correct` | `"yes"` (string, not bool) | Strict `isinstance(val, bool)` check             |
 | Row 11 | `timestamp`  | `"not-a-real-date"`        | `datetime.fromisoformat()` raises `ValueError` |
 
-Each dropped row emits a `WARNING` log naming the exact field and row index — making issues traceable in production.
+Each dropped row emits a `WARNING` log naming the exact field and row index making issues traceable in production.
 
 ### Sample Input
 
@@ -143,7 +143,7 @@ GEMINI_KEY = os.getenv("GEMINI_API_KEY", "your-key-here")
 GEMINI_MODEL = "gemini-2.5-flash"    # swap to gemini-2.5-pro for higher quality
 ```
 
-Substituting any other provider requires only replacing the `_call_llm` function — the prompt text and output schema remain identical.
+Substituting any other provider requires only replacing the `_call_llm` function, the prompt text and output schema remain identical.
 
 ### Rule-Based Fallback (no API cost)
 
@@ -151,7 +151,7 @@ Four deterministic patterns run *before* the LLM and catch the majority of commo
 
 | Pattern                | Trigger                                  | Example                      |
 | ---------------------- | ---------------------------------------- | ---------------------------- |
-| Fraction addition      | numerator + denominator added separately | `1/2 + 1/3 → 2/5`         |
+| Fraction addition      | numerator + denominator added separately | `1/2 + 1/3 = 2/5`         |
 | Kinematic formula      | student answer = correct answer ÷ 2     | `v=19.6, student says 9.8` |
 | Algebra isolation      | wrong inverse operation                  | `2x+3=11, student says 7`  |
 | Newton's Law confusion | "Second" for First Law                   | answered "Second"            |
@@ -162,7 +162,7 @@ This makes the pipeline robust in zero-connectivity environments and keeps API c
 
 ## III. Prompt Strategy Comparison
 
-Two strategies are implemented — toggle with `STRATEGY = "zero_shot" | "chain"` in `pipeline.py`.
+Two strategies are implemented, toggle with `STRATEGY = "zero_shot" | "chain"` in `pipeline.py`.
 
 ### Zero-Shot (Strategy A)
 
@@ -179,7 +179,7 @@ Student's answer: 2/5
 Identify the specific cognitive error behind the student's wrong answer.
 ```
 
-### Chain (Strategy B — recommended)
+### Chain (Strategy B)
 
 Step 1 makes the model solve the problem step-by-step first (independent ground truth). Step 2 compares that solution to the student's answer.
 
@@ -220,7 +220,7 @@ the exact step where and why the student went wrong.
 
 ---
 
-## III. Aggregation — Why This Score Helps a Teacher
+## III. Aggregation - Why This Score Helps a Teacher
 
 ### Mastery Score Formula
 
@@ -241,9 +241,9 @@ base = Σ(weight_i × is_correct_i) / Σ(weight_i) × 100
 
 | Severity | Deduction | Teacher interpretation                         |
 | -------- | --------- | ---------------------------------------------- |
-| low      | −5 pts   | Surface slip — one targeted reminder fixes it |
-| medium   | −12 pts  | Procedural gap — targeted practice needed     |
-| high     | −22 pts  | Wrong mental model — re-teach from scratch    |
+| low      | −5 pts   | Surface slip - one targeted reminder fixes it |
+| medium   | −12 pts  | Procedural gap - targeted practice needed     |
+| high     | −22 pts  | Wrong mental model - re-teach from scratch    |
 
 A student with 50% accuracy but one high-severity misconception scores below 40 and triggers the "immediate re-teaching" flag. A flat accuracy percentage would miss this.
 
@@ -335,7 +335,7 @@ Run with `streamlit run dashboard.py`. Shows:
     └── report.py            build_teacher_report() — aggregates scores + misconceptions
 ```
 
-Each module has a single, named responsibility. A reviewer can open `llm_analyzer.py` to audit prompts, `scoring.py` to inspect the mastery formula, or `report.py` to understand the output shape — without reading anything else.
+Each module has a single, named responsibility. A reviewer can open `llm_analyzer.py` to audit prompts, `scoring.py` to inspect the mastery formula, or `report.py` to understand the output shape without reading anything else.
 
 ---
 
