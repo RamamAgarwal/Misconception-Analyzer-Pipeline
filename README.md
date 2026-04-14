@@ -230,7 +230,7 @@ mastery_score = max(0, time_weighted_base − Σ severity_deductions)
 
 **Time-weighted base (why it beats a flat percentage):**
 
-Recent attempts are stronger evidence of current understanding than old ones. A student who failed the first 3 attempts but succeeded in the last 2 is on an upward trajectory — their score should reflect that progress, not be dragged down by early struggles.
+Recent attempts are stronger evidence of current understanding than old ones. A student who failed the first 3 attempts but succeeded in the last 2 is on an upward trajectory, their score should reflect that progress, not be dragged down by early struggles.
 
 ```
 weight_i = e^(i / n)    [later attempts weighted ~2.7× more than the first]
@@ -247,7 +247,7 @@ base = Σ(weight_i × is_correct_i) / Σ(weight_i) × 100
 
 A student with 50% accuracy but one high-severity misconception scores below 40 and triggers the "immediate re-teaching" flag. A flat accuracy percentage would miss this.
 
-**Concrete example:** A teacher can now see that S01 scored 50% accuracy on Fractions but their mastery score is 28% — because the single wrong attempt reveals a *high-severity* misconception (treating fraction addition like whole-number addition). That's the intervention signal a flat percentage cannot give.
+**Concrete example:** A teacher can now see that S01 scored 50% accuracy on Fractions but their mastery score is 28% because the single wrong attempt reveals a *high-severity* misconception (treating fraction addition like whole-number addition). That's the intervention signal a flat percentage cannot give.
 
 ### Intervention Thresholds
 
@@ -310,29 +310,29 @@ A student with 50% accuracy but one high-severity misconception scores below 40 
 
 Run with `streamlit run dashboard.py`. Shows:
 
-- **KPI cards** — students tracked, concepts covered, avg mastery, at-risk count
-- **Concept heatmap** — student × concept mastery matrix (colour-coded red → green)
-- **Mastery bar chart** — per-student scores grouped by concept
-- **Misconception frequency** — most common errors, colour-coded by severity
-- **Class accuracy by concept** — where the whole class is struggling
-- **Per-student drill-down** — intervention badge, misconception details, hints, recent wrong attempts
+- **KPI cards** - students tracked, concepts covered, avg mastery, at-risk count
+- **Concept heatmap** - student × concept mastery matrix (colour-coded red → green)
+- **Mastery bar chart** - per-student scores grouped by concept
+- **Misconception frequency** - most common errors, colour-coded by severity
+- **Class accuracy by concept** - where the whole class is struggling
+- **Per-student drill-down** - intervention badge, misconception details, hints, recent wrong attempts
 
 ---
 
 ## Project Structure
 
 ```
-├── pipeline.py              Thin orchestrator — imports from src/, runs main()
+├── pipeline.py              Thin orchestrator - imports from src/, runs main()
 ├── dashboard.py             Streamlit teacher dashboard
 ├── student_logs.json        Input: 10 valid + 2 intentionally malformed records
 ├── teacher_report.json      Generated output (created by running pipeline.py)
 ├── README.md
 └── src/
     ├── config.py            All constants: provider, model, strategy, file paths
-    ├── data_loader.py       load_and_clean() — JSON → validated Pandas DataFrame
+    ├── data_loader.py       load_and_clean() - JSON -> validated Pandas DataFrame
     ├── llm_analyzer.py      Prompts, rule-based fallback, LLM dispatch, analyze_misconceptions()
     ├── scoring.py           time_weighted_base(), get_intervention(), SEVERITY_DEDUCTION
-    └── report.py            build_teacher_report() — aggregates scores + misconceptions
+    └── report.py            build_teacher_report() - aggregates scores + misconceptions
 ```
 
 Each module has a single, named responsibility. A reviewer can open `llm_analyzer.py` to audit prompts, `scoring.py` to inspect the mastery formula, or `report.py` to understand the output shape without reading anything else.
@@ -341,10 +341,10 @@ Each module has a single, named responsibility. A reviewer can open `llm_analyze
 
 ## Future Work
 
-- **Longitudinal tracking** — store reports across sessions to plot mastery trajectories over time
-- **Alert system** — email/Slack notification when a student drops below the re-teaching threshold
-- **Adaptive question generation** — feed misconceptions back into the AI Tutor to auto-generate targeted remediation questions
-- **Multi-subject extension** — add Chemistry and Biology concept taxonomies to the rule-based fallback
-- **Student-facing hints** — expose the `hint` field directly in the AI Tutor UI after each wrong attempt
+- **Longitudinal tracking** - store reports across sessions to plot mastery trajectories over time
+- **Alert system** - email/Slack notification when a student drops below the re-teaching threshold
+- **Adaptive question generation** - feed misconceptions back into the AI Tutor to auto-generate targeted remediation questions
+- **Multi-subject extension** - add Chemistry and Biology concept taxonomies to the rule-based fallback
+- **Student-facing hints** - expose the `hint` field directly in the AI Tutor UI after each wrong attempt
 
 ChatGPT LLM Chat Thread: https://chatgpt.com/share/69dbb1e0-78fc-83e8-908e-e7f22a8dfb70
