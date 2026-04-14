@@ -29,7 +29,7 @@ Students make systematic errors that teachers can't track at scale -> an LLM-pow
                            │ unmatched rows only
                            │
               ┌────────────▼─────────────┐
-              │  src/llm_analyzer.py     │  Gemini 1.5 Flash (free tier)
+              │  src/llm_analyzer.py     │  Gemini 2.5 Flash (free tier)
               │                          │  OR mock provider (offline)
               │  ┌─────────┐ ┌────────┐  │
               │  │Zero-Shot│ │ Chain  │  │  toggle via STRATEGY= in config.py
