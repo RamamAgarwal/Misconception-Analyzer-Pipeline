@@ -216,7 +216,7 @@ the exact step where and why the student went wrong.
 | `2x + 3 = 11`      | `7`          | "Error isolating variable"           | "Subtracted from 11 correctly but then subtracted 1 instead of dividing by 2"                   |
 | Newton's 1st Law     | "Second"       | "Misidentified Newton's law"         | "Confused the condition for inertia (no force needed) with the force-acceleration relationship" |
 
-**Verdict: Chain outperforms zero-shot.** The independent solve-step prevents the model from anchoring on the student's wrong answer, producing diagnoses specific enough to guide re-teaching (e.g., "treated quadratic as linear" vs "formula error"). Trade-off: 2 API calls instead of 1 — acceptable for a batch pipeline.
+**Verdict: Chain outperforms zero-shot.** The independent solve-step prevents the model from anchoring on the student's wrong answer, producing diagnoses specific enough to guide re-teaching (e.g., "treated quadratic as linear" vs "formula error"). Trade-off: 2 API calls instead of 1 which can be acceptable for a batch pipeline.
 
 ---
 
