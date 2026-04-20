@@ -1,7 +1,8 @@
 # Misconception Analyzer Pipeline
 
-> **Problem → Solution → Impact**
-> Students make systematic errors that teachers can't track at scale → an LLM-powered pipeline diagnoses each error, scores concept mastery, and surfaces it in a teacher dashboard → a teacher can now spot in one glance that *S01 is repeatedly confusing denominator addition in Fractions* and intervene before the gap compounds.
+> **Problem -> Solution -> Impact** 
+
+Students make systematic errors that teachers can't track at scale -> an LLM-powered pipeline diagnoses each error, scores concept mastery, and surfaces it in a teacher dashboard -> a teacher can now spot in one glance that *S01 is repeatedly confusing denominator addition in Fractions* and intervene before the gap compounds.
 
 ---
 
@@ -28,7 +29,7 @@
                            │ unmatched rows only
                            │
               ┌────────────▼─────────────┐
-              │  src/llm_analyzer.py     │  Gemini 1.5 Flash (free tier)
+              │  src/llm_analyzer.py     │  Gemini 2.5 Flash (free tier)
               │                          │  OR mock provider (offline)
               │  ┌─────────┐ ┌────────┐  │
               │  │Zero-Shot│ │ Chain  │  │  toggle via STRATEGY= in config.py
@@ -57,10 +58,7 @@
 **Dependencies:**
 
 ```bash
-pip install pandas streamlit plotly
-
-# For Gemini LLM:
-pip install pandas google-genai
+pip install -r requirements.txt
 export GEMINI_API_KEY="your-key-here"
 ```
 
@@ -84,14 +82,14 @@ streamlit run dashboard.py
 
 ### Input: `student_logs.json`
 
-10 valid records covering 4 students, 2 subjects, 4 concepts — plus **2 intentionally malformed rows** to demonstrate validation:
+10 valid records covering 4 students, 2 subjects, 4 concepts along with **2 intentionally malformed rows** to demonstrate validation:
 
 | Row    | Field          | Flaw                         | How it's caught                                    |
 | ------ | -------------- | ---------------------------- | -------------------------------------------------- |
 | Row 10 | `is_correct` | `"yes"` (string, not bool) | Strict `isinstance(val, bool)` check             |
 | Row 11 | `timestamp`  | `"not-a-real-date"`        | `datetime.fromisoformat()` raises `ValueError` |
 
-Each dropped row emits a `WARNING` log naming the exact field and row index — making issues traceable in production.
+Each dropped row emits a `WARNING` log naming the exact field and row index making issues traceable in production.
 
 ### Sample Input
 
@@ -145,7 +143,7 @@ GEMINI_KEY = os.getenv("GEMINI_API_KEY", "your-key-here")
 GEMINI_MODEL = "gemini-2.5-flash"    # swap to gemini-2.5-pro for higher quality
 ```
 
-Substituting any other provider requires only replacing the `_call_llm` function — the prompt text and output schema remain identical.
+Substituting any other provider requires only replacing the `_call_llm` function, the prompt text and output schema remain identical.
 
 ### Rule-Based Fallback (no API cost)
 
@@ -153,7 +151,7 @@ Four deterministic patterns run *before* the LLM and catch the majority of commo
 
 | Pattern                | Trigger                                  | Example                      |
 | ---------------------- | ---------------------------------------- | ---------------------------- |
-| Fraction addition      | numerator + denominator added separately | `1/2 + 1/3 → 2/5`         |
+| Fraction addition      | numerator + denominator added separately | `1/2 + 1/3 = 2/5`         |
 | Kinematic formula      | student answer = correct answer ÷ 2     | `v=19.6, student says 9.8` |
 | Algebra isolation      | wrong inverse operation                  | `2x+3=11, student says 7`  |
 | Newton's Law confusion | "Second" for First Law                   | answered "Second"            |
@@ -164,7 +162,7 @@ This makes the pipeline robust in zero-connectivity environments and keeps API c
 
 ## III. Prompt Strategy Comparison
 
-Two strategies are implemented — toggle with `STRATEGY = "zero_shot" | "chain"` in `pipeline.py`.
+Two strategies are implemented, toggle with `STRATEGY = "zero_shot" | "chain"` in `pipeline.py`.
 
 ### Zero-Shot (Strategy A)
 
@@ -181,7 +179,7 @@ Student's answer: 2/5
 Identify the specific cognitive error behind the student's wrong answer.
 ```
 
-### Chain (Strategy B — recommended)
+### Chain (Strategy B)
 
 Step 1 makes the model solve the problem step-by-step first (independent ground truth). Step 2 compares that solution to the student's answer.
 
@@ -218,11 +216,11 @@ the exact step where and why the student went wrong.
 | `2x + 3 = 11`      | `7`          | "Error isolating variable"           | "Subtracted from 11 correctly but then subtracted 1 instead of dividing by 2"                   |
 | Newton's 1st Law     | "Second"       | "Misidentified Newton's law"         | "Confused the condition for inertia (no force needed) with the force-acceleration relationship" |
 
-**Verdict: Chain outperforms zero-shot.** The independent solve-step prevents the model from anchoring on the student's wrong answer, producing diagnoses specific enough to guide re-teaching (e.g., "treated quadratic as linear" vs "formula error"). Trade-off: 2 API calls instead of 1 — acceptable for a batch pipeline.
+**Verdict: Chain outperforms zero-shot.** The independent solve-step prevents the model from anchoring on the student's wrong answer, producing diagnoses specific enough to guide re-teaching (e.g., "treated quadratic as linear" vs "formula error"). Trade-off: 2 API calls instead of 1 which can be acceptable for a batch pipeline.
 
 ---
 
-## III. Aggregation — Why This Score Helps a Teacher
+## III. Aggregation - Why This Score Helps a Teacher
 
 ### Mastery Score Formula
 
@@ -232,7 +230,7 @@ mastery_score = max(0, time_weighted_base − Σ severity_deductions)
 
 **Time-weighted base (why it beats a flat percentage):**
 
-Recent attempts are stronger evidence of current understanding than old ones. A student who failed the first 3 attempts but succeeded in the last 2 is on an upward trajectory — their score should reflect that progress, not be dragged down by early struggles.
+Recent attempts are stronger evidence of current understanding than old ones. A student who failed the first 3 attempts but succeeded in the last 2 is on an upward trajectory, their score should reflect that progress, not be dragged down by early struggles.
 
 ```
 weight_i = e^(i / n)    [later attempts weighted ~2.7× more than the first]
@@ -243,13 +241,13 @@ base = Σ(weight_i × is_correct_i) / Σ(weight_i) × 100
 
 | Severity | Deduction | Teacher interpretation                         |
 | -------- | --------- | ---------------------------------------------- |
-| low      | −5 pts   | Surface slip — one targeted reminder fixes it |
-| medium   | −12 pts  | Procedural gap — targeted practice needed     |
-| high     | −22 pts  | Wrong mental model — re-teach from scratch    |
+| low      | −5 pts   | Surface slip - one targeted reminder fixes it |
+| medium   | −12 pts  | Procedural gap - targeted practice needed     |
+| high     | −22 pts  | Wrong mental model - re-teach from scratch    |
 
 A student with 50% accuracy but one high-severity misconception scores below 40 and triggers the "immediate re-teaching" flag. A flat accuracy percentage would miss this.
 
-**Concrete example:** A teacher can now see that S01 scored 50% accuracy on Fractions but their mastery score is 28% — because the single wrong attempt reveals a *high-severity* misconception (treating fraction addition like whole-number addition). That's the intervention signal a flat percentage cannot give.
+**Concrete example:** A teacher can now see that S01 scored 50% accuracy on Fractions but their mastery score is 28% because the single wrong attempt reveals a *high-severity* misconception (treating fraction addition like whole-number addition). That's the intervention signal a flat percentage cannot give.
 
 ### Intervention Thresholds
 
@@ -312,40 +310,41 @@ A student with 50% accuracy but one high-severity misconception scores below 40 
 
 Run with `streamlit run dashboard.py`. Shows:
 
-- **KPI cards** — students tracked, concepts covered, avg mastery, at-risk count
-- **Concept heatmap** — student × concept mastery matrix (colour-coded red → green)
-- **Mastery bar chart** — per-student scores grouped by concept
-- **Misconception frequency** — most common errors, colour-coded by severity
-- **Class accuracy by concept** — where the whole class is struggling
-- **Per-student drill-down** — intervention badge, misconception details, hints, recent wrong attempts
+- **KPI cards** - students tracked, concepts covered, avg mastery, at-risk count
+- **Concept heatmap** - student × concept mastery matrix (colour-coded red -> green)
+- **Mastery bar chart** - per-student scores grouped by concept
+- **Misconception frequency** - most common errors, colour-coded by severity
+- **Class accuracy by concept** - where the whole class is struggling
+- **Per-student drill-down** - intervention badge, misconception details, hints, recent wrong attempts
 
 ---
 
 ## Project Structure
 
 ```
-├── pipeline.py              Thin orchestrator — imports from src/, runs main()
+├── pipeline.py              Thin orchestrator - imports from src/, runs main()
 ├── dashboard.py             Streamlit teacher dashboard
 ├── student_logs.json        Input: 10 valid + 2 intentionally malformed records
 ├── teacher_report.json      Generated output (created by running pipeline.py)
 ├── README.md
 └── src/
-    ├── __init__.py
     ├── config.py            All constants: provider, model, strategy, file paths
-    ├── data_loader.py       load_and_clean() — JSON → validated Pandas DataFrame
+    ├── data_loader.py       load_and_clean() - JSON -> validated Pandas DataFrame
     ├── llm_analyzer.py      Prompts, rule-based fallback, LLM dispatch, analyze_misconceptions()
     ├── scoring.py           time_weighted_base(), get_intervention(), SEVERITY_DEDUCTION
-    └── report.py            build_teacher_report() — aggregates scores + misconceptions
+    └── report.py            build_teacher_report() - aggregates scores + misconceptions
 ```
 
-Each module has a single, named responsibility. A reviewer can open `llm_analyzer.py` to audit prompts, `scoring.py` to inspect the mastery formula, or `report.py` to understand the output shape — without reading anything else.
+Each module has a single, named responsibility. A reviewer can open `llm_analyzer.py` to audit prompts, `scoring.py` to inspect the mastery formula, or `report.py` to understand the output shape without reading anything else.
 
 ---
 
 ## Future Work
 
-- **Longitudinal tracking** — store reports across sessions to plot mastery trajectories over time
-- **Alert system** — email/Slack notification when a student drops below the re-teaching threshold
-- **Adaptive question generation** — feed misconceptions back into the AI Tutor to auto-generate targeted remediation questions
-- **Multi-subject extension** — add Chemistry and Biology concept taxonomies to the rule-based fallback
-- **Student-facing hints** — expose the `hint` field directly in the AI Tutor UI after each wrong attempt
+- **Longitudinal tracking** - store reports across sessions to plot mastery trajectories over time
+- **Alert system** - email/Slack notification when a student drops below the re-teaching threshold
+- **Adaptive question generation** - feed misconceptions back into the AI Tutor to auto-generate targeted remediation questions
+- **Multi-subject extension** - add Chemistry and Biology concept taxonomies to the rule-based fallback
+- **Student-facing hints** - expose the `hint` field directly in the AI Tutor UI after each wrong attempt
+
+ChatGPT LLM Chat Thread: https://chatgpt.com/share/69dbb1e0-78fc-83e8-908e-e7f22a8dfb70
