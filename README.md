@@ -311,7 +311,7 @@ A student with 50% accuracy but one high-severity misconception scores below 40 
 Run with `streamlit run dashboard.py`. Shows:
 
 - **KPI cards** - students tracked, concepts covered, avg mastery, at-risk count
-- **Concept heatmap** - student × concept mastery matrix (colour-coded red → green)
+- **Concept heatmap** - student × concept mastery matrix (colour-coded red -> green)
 - **Mastery bar chart** - per-student scores grouped by concept
 - **Misconception frequency** - most common errors, colour-coded by severity
 - **Class accuracy by concept** - where the whole class is struggling
