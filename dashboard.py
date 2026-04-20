@@ -46,7 +46,7 @@ def load_data():
 report, raw_logs = load_data()
 
 # Separate student data from concept summaries
-students         = {k: v for k, v in report.items() if not k.startswith("_")}
+students = {k: v for k, v in report.items() if not k.startswith("_")}
 concept_summaries = report.get("_concept_summaries", {})
 
 # Build flat DataFrames for charting
