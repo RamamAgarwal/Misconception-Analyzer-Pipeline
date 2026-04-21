@@ -42,9 +42,9 @@ if PROVIDER == "gemini":
 # ══════════════════════════════════════════════════════════════════════════════
 #
 # Design choices:
-#   • JSON-only output → no markdown fences, no prose to strip or regex away
+#   • JSON-only output -> no markdown fences, no prose to strip or regex away
 #   • Severity + confidence anchored to rubric definitions → consistent scoring
-#   • 20-word cap on `misconception` → forces dashboard-ready brevity
+#   • 20-word cap on `misconception` forces dashboard-ready brevity
 #   • `confidence` field surfaces uncertainty for downstream review
 
 ANALYSIS_SYSTEM_PROMPT = """You are an expert mathematics and physics tutor trained
@@ -61,14 +61,14 @@ Required schema (use exactly these keys):
 }
 
 Severity rubric:
-  low    — surface error (sign flip, arithmetic slip); student grasps the concept
-  medium — procedural gap (wrong step order, incomplete formula use)
-  high   — fundamental conceptual misunderstanding (entirely wrong mental model)
+  low    - surface error (sign flip, arithmetic slip); student grasps the concept
+  medium - procedural gap (wrong step order, incomplete formula use)
+  high   - fundamental conceptual misunderstanding (entirely wrong mental model)
 
 Confidence rubric:
-  low    — multiple plausible explanations; exact error unclear
-  medium — most likely cause, but other interpretations are possible
-  high   — error pattern uniquely identifies the misconception"""
+  low    - multiple plausible explanations; exact error unclear
+  medium - most likely cause, but other interpretations are possible
+  high   - error pattern uniquely identifies the misconception"""
 
 
 # ══════════════════════════════════════════════════════════════════════════════
